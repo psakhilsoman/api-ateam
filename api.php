@@ -317,10 +317,19 @@ function localphysio_callback_insert_clinic( $request_data ) {
 
     $data = array();
     $parameters = $request_data->get_params();
-    $provideruid     = $parameters['provideruid'];
+    $provideruid = $parameters['provideruid'];
     $uid = $parameters['uid'];
     $listings = $parameters['listings'];
+
+
     $btn_submit = $parameters['btn_submit'];
+
+    
+    if(is_bool($btn_submit) == 1)
+    {
+
+    if($btn_submit == true)
+    {
 
     foreach($listings as $key => $value) {
      $title = $value['title'];
@@ -329,13 +338,45 @@ function localphysio_callback_insert_clinic( $request_data ) {
      $location = $value['location'];
      $postcode = $value['postcode'];
      $telephone_1 = $value['telephone_1'];
+     $num_workers = $value['num_workers'];
+     $specialization = $value['specialization'];
+     $treatments = $value['treatments'];
      }
-    add_user_meta( $user_id, 'first_name', $firstname);
-    add_user_meta( $user_id, 'last_name', $lastname);
-    add_user_meta( $user_id, 'nickname', $firstname);
-    add_user_meta( $user_id, 'staff_type', $role);
-    add_user_meta( $user_id, 'auth_key', $auth_key);
-    add_user_meta( $user_id, 'token', $token);
+
+    $specialization_data = implode(",", $specialization );
+    $treatments_data = implode(",", $treatments );
+    add_user_meta( $uid, 'provideruid', $provideruid);
+    add_user_meta( $uid, 'address_1',  $address_1);
+    add_user_meta( $uid, 'address_2', $address_2);
+    add_user_meta( $uid, 'location', $location);
+    add_user_meta( $uid, 'location', $location);
+    add_user_meta( $uid, 'postcode', $postcode);
+    add_user_meta( $uid, 'telephone_1', $telephone_1);
+    add_user_meta( $uid, 'num_workers', $num_workers);
+    add_user_meta( $uid, 'specialization', $specialization_data);
+    add_user_meta( $uid, 'treatments', $treatments_data);
+   
+   
+    $data['status'] = 'OK';
+    $data['message'] = 'Clinic Added successfully!';
+    $response = new WP_REST_Response($data, 201);
+
+    }
+else
+{
+    $data['status'] = 'Failed';
+    $data['message'] = 'Button not submitted!';
+    $response = new WP_REST_Response($data, 400);
+}
+}
+else
+{
+    $data['status'] = 'Failed';
+    $data['message'] = 'Parameters type error';
+    $response = new WP_REST_Response($data, 400);
+}
+
+    return  $response;
 
 }
 //------------Add clinic-end-------------//
