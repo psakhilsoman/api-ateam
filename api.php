@@ -3,11 +3,11 @@
  */
 /*
 Plugin Name: Api
-Plugin URI: https://google.com/
+Plugin URI: mailto:psakhilsoman@gmail.com
 Description: Custom API
 Version: 1.0
 Author: Akhil
-Author URI: https://google.com
+Author URI: mailto:psakhilsoman@gmail.com
 License: GPLv2 or later
 Text Domain: api
 */
@@ -138,6 +138,8 @@ function localphysio_callback_signin( $request_data ) {
 
     
     $parameters = $request_data->get_params();
+
+
     $title     = $parameters['title'];
     $firstname = $parameters['firstname'];
     $lastname = $parameters['lastname'];
@@ -150,6 +152,8 @@ function localphysio_callback_signin( $request_data ) {
     $sec_key = $parameters['sec_key'];
     $btn_submit = $parameters['btn_submit'];
     $domain_flag = $parameters['domain_flag'];
+
+
     
     if(is_email($email)) {
     
@@ -160,7 +164,7 @@ function localphysio_callback_signin( $request_data ) {
     {
 
 
-    if ( isset($email) && isset($password) ) {
+    if ( count($parameters) == 12 ) {
 
     $user = get_user_by( 'login', $email);
     if ( $user == null ) {
@@ -217,7 +221,7 @@ function localphysio_callback_signin( $request_data ) {
      else {
         
         $data['status'] = 'Failed';
-        $data['message'] = 'Parameters Missing!';
+        $data['message'] = 'Parameters Missing! or Check Parameters';
         $response = new WP_REST_Response($data, 400);
         
     }
@@ -277,6 +281,8 @@ function localphysio_callback_insert_clinic( $request_data ) {
     $btn_submit = $parameters['btn_submit'];
 
     $permission = get_user_meta( $uid, 'auth_key' , true );
+
+    if($uid != null) {
 
     if($key == $permission)
     {
@@ -351,7 +357,14 @@ else
     $response = new WP_REST_Response($data, 400);
     }
 
-    
+    }
+    else
+    {
+    $data['status'] = 'Failed';
+    $data['message'] = 'uid cannot empty';
+    $response = new WP_REST_Response($data, 400);
+    }
+
  
 
 
@@ -385,6 +398,8 @@ function localphysio_callback_insert_payment( $request_data ) {
     $provideruid = $parameters['provideruid'];
     $uid = $parameters['uid'];
     $paymentData = $parameters['paymentData'];
+
+    if($uid != null) {
 
     $permission = get_user_meta( $uid, 'auth_key' , true );
 
@@ -421,6 +436,14 @@ else
     $data['message'] = 'Authentication error';
     $response = new WP_REST_Response($data, 400);
 }
+
+}
+    else
+    {
+    $data['status'] = 'Failed';
+    $data['message'] = 'uid cannot empty';
+    $response = new WP_REST_Response($data, 400);
+    }
 
     return  $response;
 }
@@ -459,6 +482,8 @@ function localphysio_callback_insert_clinic_timing( $request_data ) {
     $clinicDescription = $parameters['clinicDescription'];
     $logo = $parameters['logo'];
 
+    if($uid != null) {
+
     $permission = get_user_meta( $uid, 'auth_key' , true );
 
     if($key == $permission)
@@ -493,6 +518,14 @@ else
     $data['message'] = 'Authentication error';
     $response = new WP_REST_Response($data, 400);
 }
+
+}
+    else
+    {
+    $data['status'] = 'Failed';
+    $data['message'] = 'uid cannot empty';
+    $response = new WP_REST_Response($data, 400);
+    }
 
     return  $response;
 }
@@ -530,6 +563,8 @@ function localphysio_callback_insert_practitioner_details( $request_data ) {
     $specialization = implode(",", $parameters['specialization'] ); //array
     $description = $parameters['description'];
 
+       if($uid != null) {
+
     $permission = get_user_meta( $uid, 'auth_key' , true );
     if($key == $permission)
     {
@@ -559,6 +594,13 @@ else
     $data['message'] = 'Authentication error';
     $response = new WP_REST_Response($data, 400);
 }
+}
+    else
+    {
+    $data['status'] = 'Failed';
+    $data['message'] = 'uid cannot empty';
+    $response = new WP_REST_Response($data, 400);
+    }
     return  $response;
 }
     

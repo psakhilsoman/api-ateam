@@ -143,7 +143,7 @@ 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 //ignore
 
 #API 6
 
-#Adding physiotherapist : metho = post
+#Adding physiotherapist : method = post
 
   /wp-json/api/v1/signup/practitioner-details
 
